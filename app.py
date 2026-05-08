@@ -7,7 +7,6 @@ model = joblib.load("model.pkl")
 columns = joblib.load("columns.pkl")
 
 st.title("🧠 Mental Health Prediction App")
-
 st.write("Fill the details below:")
 
 # Inputs
@@ -29,19 +28,18 @@ work_interest = st.selectbox(
 )
 
 stress = st.slider("Stress Level", 0, 10, 5)
-
 days_indoors = st.slider("Days Indoors", 0, 30, 5)
 
-# Create empty dictionary
+# Create empty dictionary based on training columns
 data = dict.fromkeys(columns, 0)
 
-# Dynamic columns
+# Dynamic feature mapping
 gender_col = f"Gender_{gender}"
 family_col = f"FamilyHistory_{family_history}"
 mood_col = f"MoodSwings_{mood_swings}"
 work_col = f"WorkInterest_{work_interest}"
 
-# Fill categorical values
+# Fill categorical features
 if gender_col in data:
     data[gender_col] = 1
 
@@ -54,17 +52,20 @@ if mood_col in data:
 if work_col in data:
     data[work_col] = 1
 
-# Fill numerical values
+# Fill numerical features
 if "IncreasingStress" in data:
     data["IncreasingStress"] = stress
 
 if "DaysIndoors" in data:
     data["DaysIndoors"] = days_indoors
 
-# Predict button
+# Prediction
 if st.button("Predict"):
 
     sample = pd.DataFrame([data])
+
+    # IMPORTANT FIX (align features exactly)
+    sample = sample.reindex(columns=columns, fill_value=0)
 
     prediction = model.predict(sample)
 
