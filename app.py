@@ -33,13 +33,12 @@ days_indoors = st.slider("Days Indoors", 0, 30, 5)
 # Create empty dictionary based on training columns
 data = dict.fromkeys(columns, 0)
 
-# Dynamic feature mapping
+# Map categorical inputs
 gender_col = f"Gender_{gender}"
 family_col = f"FamilyHistory_{family_history}"
 mood_col = f"MoodSwings_{mood_swings}"
 work_col = f"WorkInterest_{work_interest}"
 
-# Fill categorical features
 if gender_col in data:
     data[gender_col] = 1
 
@@ -52,19 +51,19 @@ if mood_col in data:
 if work_col in data:
     data[work_col] = 1
 
-# Fill numerical features
+# Numerical values
 if "IncreasingStress" in data:
     data["IncreasingStress"] = stress
 
 if "DaysIndoors" in data:
     data["DaysIndoors"] = days_indoors
 
-# Prediction
+# Predict
 if st.button("Predict"):
 
     sample = pd.DataFrame([data])
 
-    # IMPORTANT FIX (align features exactly)
+    # FIX: align features with training
     sample = sample.reindex(columns=columns, fill_value=0)
 
     prediction = model.predict(sample)
