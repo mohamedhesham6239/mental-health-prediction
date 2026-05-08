@@ -2,6 +2,7 @@ import streamlit as st
 import joblib
 import pandas as pd
 
+# Load model and columns
 model = joblib.load("model.pkl")
 columns = joblib.load("columns.pkl")
 
@@ -9,7 +10,7 @@ st.title("🧠 Mental Health Prediction App")
 
 st.write("Fill the details below:")
 
-
+# Inputs
 gender = st.selectbox("Gender", ["Male", "Female"])
 
 family_history = st.selectbox(
@@ -31,15 +32,16 @@ stress = st.slider("Stress Level", 0, 10, 5)
 
 days_indoors = st.slider("Days Indoors", 0, 30, 5)
 
-
+# Create empty dictionary
 data = dict.fromkeys(columns, 0)
 
+# Dynamic columns
 gender_col = f"Gender_{gender}"
 family_col = f"FamilyHistory_{family_history}"
 mood_col = f"MoodSwings_{mood_swings}"
 work_col = f"WorkInterest_{work_interest}"
 
-
+# Fill categorical values
 if gender_col in data:
     data[gender_col] = 1
 
@@ -52,20 +54,17 @@ if mood_col in data:
 if work_col in data:
     data[work_col] = 1
 
+# Fill numerical values
 if "IncreasingStress" in data:
     data["IncreasingStress"] = stress
 
 if "DaysIndoors" in data:
     data["DaysIndoors"] = days_indoors
 
-
+# Predict button
 if st.button("Predict"):
 
     sample = pd.DataFrame([data])
-
-
-    st.write("Sample Shape:", sample.shape)
-    st.write("Model Expects:", model.n_features_in_)
 
     prediction = model.predict(sample)
 
