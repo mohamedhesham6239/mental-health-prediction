@@ -1,2 +1,2 @@
  Open Live App  
-https://your-app-url.streamlit.app
+https://mental-health-prediction-cajvkalagwxuqztm8caaua.streamlit.app/
