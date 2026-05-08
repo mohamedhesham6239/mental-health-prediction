@@ -2,7 +2,7 @@ import streamlit as st
 import joblib
 import pandas as pd
 
-# Load model and columns
+
 model = joblib.load("model.pkl")
 columns = joblib.load("columns.pkl")
 
@@ -10,7 +10,7 @@ st.title("🧠 Mental Health Prediction App")
 
 st.write("Fill the details below:")
 
-# Inputs
+
 gender = st.selectbox("Gender", ["Male", "Female"])
 family_history = st.selectbox("Family History", ["Yes", "No"])
 mood_swings = st.selectbox("Mood Swings", ["Low", "Medium", "High"])
@@ -18,10 +18,10 @@ work_interest = st.selectbox("Work Interest", ["Low", "Medium", "High"])
 stress = st.slider("Stress Level", 0, 10, 5)
 days_indoors = st.slider("Days Indoors", 0, 30, 5)
 
-# Create empty dictionary with same structure as training columns
+
 data = dict.fromkeys(columns, 0)
 
-# Fill categorical features (based on get_dummies names)
+
 gender_col = f"Gender_{gender}"
 family_col = f"FamilyHistory_{family_history}"
 mood_col = f"MoodSwings_{mood_swings}"
@@ -39,19 +39,18 @@ if mood_col in data:
 if work_col in data:
     data[work_col] = 1
 
-# Fill numerical features
 if "IncreasingStress" in data:
     data["IncreasingStress"] = stress
 
 if "DaysIndoors" in data:
     data["DaysIndoors"] = days_indoors
 
-# Predict
+
 if st.button("Predict"):
 
     sample = pd.DataFrame([data])
 
-    # 🔥 IMPORTANT: align columns with training
+
     sample = sample.reindex(columns=columns, fill_value=0)
 
     prediction = model.predict(sample)
